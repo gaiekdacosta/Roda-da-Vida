@@ -1207,27 +1207,22 @@ async function copyText(text) {
   } catch (e) { return false; }
 }
 
-// Monta uma legenda personalizada e profissional para o compartilhamento
+// Legenda neutra e informativa para o compartilhamento (sem emojis e sem
+// revelar resultados — serve tanto para uso pessoal quanto para um profissional
+// enviar a outra pessoa como convite).
 function buildShareText() {
-  const values = state.areas.map(a => a.value);
-  const avg = fmtAvg(values);
-  let best = 0, worst = 0;
-  values.forEach((v, i) => {
-    if (v > values[best]) best = i;
-    if (v < values[worst]) worst = i;
-  });
-
-  const lines = [`🎡 Minha Roda da Vida — média ${avg}/10`, ""];
-  if (values[best] === values[worst]) {
-    lines.push("As 12 áreas da minha vida estão equilibradas neste momento. ✨");
-  } else {
-    lines.push(`💪 Ponto forte: ${state.areas[best].name} (${values[best]}/10)`);
-    lines.push(`🎯 Merece atenção: ${state.areas[worst].name} (${values[worst]}/10)`);
-  }
-  lines.push("", "Faça também a sua avaliação das 12 áreas da vida e descubra onde focar. 👇");
+  const lines = [
+    "Roda da Vida",
+    "",
+    "Uma ferramenta simples de autoconhecimento: você dá uma nota de 0 a 10 para 12 áreas da vida (como carreira, finanças, saúde, relacionamentos e bem-estar) e visualiza, em um gráfico, onde há mais equilíbrio e o que merece atenção.",
+  ];
 
   const url = shareUrl();
-  if (url) lines.push(url);
+  if (url) {
+    lines.push("", "Faça a sua avaliação, gratuitamente e sem cadastro:", url);
+  } else {
+    lines.push("", "Uma avaliação gratuita e sem cadastro.");
+  }
   return lines.join("\n");
 }
 
@@ -1256,7 +1251,7 @@ shareBtn.addEventListener("click", async () => {
         const blob = await exportBlob();
         const file = blob && new File([blob], exportFileName(), { type: "image/png" });
         if (file && navigator.canShare({ files: [file] })) {
-          await navigator.share({ files: [file], title: "Minha Roda da Vida", text });
+          await navigator.share({ files: [file], title: "Roda da Vida", text });
           return;
         }
       } catch (e) {
@@ -1287,7 +1282,7 @@ function openShareModal(text) {
   $("#shareWhatsapp").href = `https://wa.me/?text=${eText}`;
   $("#shareTelegram").href = `https://t.me/share/url?url=${eUrl}&text=${eText}`;
   $("#shareX").href = `https://twitter.com/intent/tweet?text=${eText}`;
-  $("#shareEmail").href = `mailto:?subject=${encodeURIComponent("Minha Roda da Vida")}&body=${eText}`;
+  $("#shareEmail").href = `mailto:?subject=${encodeURIComponent("Roda da Vida")}&body=${eText}`;
 
   lastFocused = document.activeElement;
   shareModal.hidden = false;
