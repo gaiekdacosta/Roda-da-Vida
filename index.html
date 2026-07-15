@@ -107,17 +107,17 @@
 
   /* ---------- Estrutura ---------- */
   main {
-    max-width: 1120px; margin: 0 auto;
-    padding: 20px 16px calc(120px + env(safe-area-inset-bottom));
+    max-width: 1240px; margin: 0 auto;
+    padding: 24px 20px calc(120px + env(safe-area-inset-bottom));
   }
-  .hero { padding: 8px 4px 20px; max-width: 620px; }
-  .hero h1 { font-size: clamp(1.7rem, 5.5vw, 2.3rem); letter-spacing: -0.02em; line-height: 1.15; }
-  .hero p { color: var(--ink-2); margin-top: 8px; font-size: 0.98rem; }
+  .hero { padding: 8px 4px 22px; max-width: 720px; }
+  .hero h1 { font-size: clamp(1.7rem, 5.5vw, 2.4rem); letter-spacing: -0.02em; line-height: 1.15; }
+  .hero p { color: var(--ink-2); margin-top: 10px; font-size: 1rem; }
 
   .layout { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
-  @media (min-width: 960px) {
-    .layout { grid-template-columns: 480px 1fr; gap: 24px; }
-    .wheel-col { position: sticky; top: 76px; }
+  @media (min-width: 940px) {
+    .layout { grid-template-columns: minmax(400px, 448px) 1fr; gap: 28px; }
+    .wheel-col { position: sticky; top: 78px; }
   }
 
   .card {
@@ -172,26 +172,44 @@
   .reset-btn { color: var(--ink-3); font-size: 0.82rem; font-weight: 600; padding: 6px 8px; border-radius: 8px; }
   .reset-btn:hover { color: var(--ink-1); background: color-mix(in srgb, var(--ink-1) 6%, transparent); }
 
-  .quadrant { margin-top: 12px; }
-  .q-head { display: flex; align-items: center; gap: 8px; padding: 2px 4px 8px; }
-  .q-head .q-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-2); }
-
-  .area-row { padding: 12px 2px 14px; }
-  .area-row + .area-row { border-top: 1px solid var(--border); }
-  .row-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .area-name {
-    font-weight: 600; font-size: 0.95rem; outline: none;
-    border-radius: 6px; padding: 1px 4px; margin-left: -4px;
-    min-width: 40px;
+  #areasList { display: grid; gap: 12px; margin-top: 14px; }
+  @media (min-width: 1180px) {
+    #areasList { grid-template-columns: 1fr 1fr; }
   }
-  .area-name:focus { box-shadow: 0 0 0 2px var(--accent); }
-  .edit-btn { color: var(--ink-3); width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; flex: none; }
+  .area-row {
+    display: flex; flex-direction: column;
+    background: color-mix(in srgb, var(--qc) 4%, var(--surface));
+    border: 1px solid var(--border); border-radius: 14px;
+    padding: 14px 15px 16px;
+    border-left: 4px solid var(--qc);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .area-row:focus-within,
+  .area-row:hover { box-shadow: 0 4px 14px rgba(11, 11, 11, 0.06); }
+  :root[data-theme="dark"] .area-row:focus-within,
+  :root[data-theme="dark"] .area-row:hover { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35); }
+
+  .row-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+  .area-head { min-width: 0; flex: 1; }
+  .area-name {
+    font-weight: 650; font-size: 0.98rem; outline: none;
+    border-radius: 6px; padding: 1px 4px; margin-left: -4px;
+    display: inline-block; min-width: 40px; letter-spacing: -0.01em;
+  }
+  .area-name:focus { box-shadow: 0 0 0 2px var(--accent); background: var(--page); }
+  .area-desc { color: var(--ink-3); font-size: 0.82rem; margin-top: 3px; line-height: 1.35; }
+
+  .row-tools { display: flex; align-items: center; gap: 6px; flex: none; }
+  .edit-btn { color: var(--ink-3); width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; flex: none; }
   .edit-btn:hover { color: var(--ink-1); background: color-mix(in srgb, var(--ink-1) 6%, transparent); }
+
+  .slider-wrap { display: flex; align-items: center; gap: 12px; margin-top: auto; }
+  .slider-wrap input[type="range"] { flex: 1; min-width: 0; }
   .value-badge {
-    margin-left: auto; flex: none; min-width: 42px; text-align: center;
+    flex: none; min-width: 44px; text-align: center;
     font-weight: 750; font-size: 0.95rem; font-variant-numeric: tabular-nums;
-    padding: 3px 10px; border-radius: 999px;
-    background: color-mix(in srgb, var(--qc) 14%, transparent);
+    padding: 4px 10px; border-radius: 999px; color: var(--ink-1);
+    background: color-mix(in srgb, var(--qc) 18%, transparent);
   }
 
   input[type="range"] {
@@ -292,7 +310,7 @@
   <div class="layout">
     <div class="wheel-col">
       <div class="card wheel-card">
-        <svg id="wheel" viewBox="0 0 764 764" role="img" aria-label="Gráfico da Roda da Vida com as notas das 12 áreas"></svg>
+        <svg id="wheel" viewBox="-44 0 852 764" role="img" aria-label="Gráfico da Roda da Vida com as notas das 12 áreas"></svg>
         <div class="tooltip" id="tooltip"></div>
         <p class="wheel-hint">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11.5V5a1.5 1.5 0 0 1 3 0v6m0-2a1.5 1.5 0 0 1 3 0v2m0-1a1.5 1.5 0 0 1 3 0v4a6 6 0 0 1-6 6h-1.6a6 6 0 0 1-4.7-2.3L4 15.4a1.6 1.6 0 0 1 2.4-2.1L9 15.5"/></svg>
@@ -351,30 +369,25 @@
 
 /* ================= Dados ================= */
 
-const QUADRANTS = [
-  { label: "Pessoal",            varName: "--q0" },
-  { label: "Profissional",       varName: "--q1" },
-  { label: "Relacionamentos",    varName: "--q2" },
-  { label: "Qualidade de Vida",  varName: "--q3" },
-];
-
+// Cada categoria tem nome, descrição, rótulo curto (usado na roda) e cor própria.
 const DEFAULT_AREAS = [
-  { q: 0, name: "Saúde e Disposição",          short: "Saúde" },
-  { q: 0, name: "Desenvolvimento Intelectual", short: "Intelecto" },
-  { q: 0, name: "Equilíbrio Emocional",        short: "Emocional" },
-  { q: 0, name: "Espiritualidade",             short: "Espiritual" },
-  { q: 1, name: "Realização e Propósito",      short: "Propósito" },
-  { q: 1, name: "Recursos Financeiros",        short: "Finanças" },
-  { q: 1, name: "Contribuição Social",         short: "Contribuição" },
-  { q: 2, name: "Família",                     short: "Família" },
-  { q: 2, name: "Relacionamento Amoroso",      short: "Amor" },
-  { q: 2, name: "Vida Social",                 short: "Vida Social" },
-  { q: 3, name: "Criatividade e Diversão",     short: "Diversão" },
-  { q: 3, name: "Plenitude e Felicidade",      short: "Plenitude" },
+  { name: "Carreira & Trabalho",       desc: "Satisfação no trabalho e crescimento profissional", short: "Carreira",     color: "#ef4444" },
+  { name: "Finanças & Dinheiro",       desc: "Segurança financeira e gestão do dinheiro",         short: "Finanças",     color: "#f97316" },
+  { name: "Saúde & Fitness",           desc: "Saúde física e nível de condicionamento",           short: "Saúde",        color: "#eab308" },
+  { name: "Família",                   desc: "Relacionamentos com membros da família",            short: "Família",      color: "#22c55e" },
+  { name: "Amor & Romance",            desc: "Relacionamentos românticos e intimidade",           short: "Amor",         color: "#10b981" },
+  { name: "Vida Social & Amizades",    desc: "Amizades e conexões sociais",                       short: "Social",       color: "#06b6d4" },
+  { name: "Crescimento Pessoal",       desc: "Aprendizado e desenvolvimento pessoal",             short: "Crescimento",  color: "#3b82f6" },
+  { name: "Recreação & Diversão",      desc: "Hobbies e atividades de lazer",                     short: "Recreação",    color: "#6366f1" },
+  { name: "Ambiente Físico",           desc: "Satisfação com casa e espaço de vida",              short: "Ambiente",     color: "#8b5cf6" },
+  { name: "Contribuição & Impacto",    desc: "Retribuir e fazer a diferença",                     short: "Contribuição", color: "#a855f7" },
+  { name: "Espiritualidade",           desc: "Práticas espirituais e crenças",                    short: "Espiritual",   color: "#d946ef" },
+  { name: "Saúde Mental & Emocional",  desc: "Bem-estar emocional e saúde mental",                short: "Bem-estar",    color: "#ec4899" },
 ];
 
-const STORE_KEY = "rodaDaVida.v1";
+const STORE_KEY = "rodaDaVida.v2";
 const N = DEFAULT_AREAS.length;
+const HEX_RE = /^#[0-9a-fA-F]{6}$/;
 
 function defaultState() {
   return {
@@ -390,9 +403,10 @@ function loadState() {
     const data = JSON.parse(raw);
     if (!Array.isArray(data.areas) || data.areas.length !== N) return defaultState();
     const areas = data.areas.map((a, i) => ({
-      q: DEFAULT_AREAS[i].q,
       name: typeof a.name === "string" && a.name.trim() ? a.name.slice(0, 40) : DEFAULT_AREAS[i].name,
+      desc: typeof a.desc === "string" && a.desc.trim() ? a.desc.slice(0, 80) : DEFAULT_AREAS[i].desc,
       short: typeof a.short === "string" && a.short.trim() ? a.short.slice(0, 14) : DEFAULT_AREAS[i].short,
+      color: typeof a.color === "string" && HEX_RE.test(a.color) ? a.color.toLowerCase() : DEFAULT_AREAS[i].color,
       value: Math.min(10, Math.max(0, Math.round(Number(a.value)) || 0)),
     }));
     return { areas, updatedAt: data.updatedAt || null };
@@ -419,8 +433,14 @@ const SEG = TAU / N;
 const START = -Math.PI / 2;
 
 function cssVar(name) { return getComputedStyle(root).getPropertyValue(name).trim(); }
-function qColor(i) { return cssVar(QUADRANTS[state.areas[i].q].varName); }
-function qInk(i) { return cssVar(QUADRANTS[state.areas[i].q].varName + "-ink"); }
+
+// Escolhe texto preto ou branco conforme o brilho da cor de fundo
+function contrastInk(hex) {
+  const c = hex.replace("#", "");
+  const r = parseInt(c.slice(0, 2), 16), g = parseInt(c.slice(2, 4), 16), b = parseInt(c.slice(4, 6), 16);
+  const L = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return L > 150 ? "#0b0b0b" : "#ffffff";
+}
 
 function polar(cx, cy, r, a) { return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; }
 
@@ -456,9 +476,12 @@ function showToast(msg) {
 /* ================= Roda (SVG) ================= */
 
 const SVG_NS = "http://www.w3.org/2000/svg";
-const VB = 764, C = 382, R = 246, R0 = 62, LABEL_R = R + 24;
+// viewBox com folga horizontal (-44 … 808) para os rótulos laterais não cortarem;
+// a roda fica centrada em C=382 (metade da largura 852 = 426, deslocada por -44)
+const VBX = -44, VBY = 0, VBW = 852, VBH = 764;
+const C = 382, R = 246, R0 = 62, LABEL_R = R + 24;
 const wheel = $("#wheel");
-const segEls = []; // { fill, chip, chipText, label }
+const segEls = []; // { fill, chip, chipText, label, track }
 let centerAvgEl, centerSubEl;
 
 function svgEl(tag, attrs, parent) {
@@ -483,12 +506,13 @@ function buildWheel() {
   const gCenter = svgEl("g", {}, wheel);
 
   // Trilhas de fundo (mostram o alvo de cada fatia)
+  const trackEls = [];
   for (let i = 0; i < N; i++) {
     const a0 = START + i * SEG, a1 = a0 + SEG;
-    svgEl("path", {
+    trackEls[i] = svgEl("path", {
       d: sectorPath(C, C, R0, R, a0, a1),
-      fill: `var(${QUADRANTS[state.areas[i].q].varName})`,
-      "fill-opacity": "0.07",
+      fill: state.areas[i].color,
+      "fill-opacity": "0.09",
     }, gTracks);
   }
 
@@ -511,25 +535,25 @@ function buildWheel() {
   // Fatias de valor + chips + rótulos
   for (let i = 0; i < N; i++) {
     const a = midAngle(i);
-    const varName = QUADRANTS[state.areas[i].q].varName;
+    const color = state.areas[i].color;
 
     const fill = svgEl("path", {
       class: "seg-fill",
-      fill: `var(${varName})`,
+      fill: color,
       stroke: "var(--surface)",
       "stroke-width": "3",
       "stroke-linejoin": "round",
     }, gFills);
 
     const chip = svgEl("circle", {
-      r: "15", fill: `var(${varName})`,
+      r: "15", fill: color,
       stroke: "var(--surface)", "stroke-width": "2.5",
       "pointer-events": "none",
     }, gChips);
     const chipText = svgEl("text", {
       "text-anchor": "middle", dy: "0.36em",
       "font-size": "15", "font-weight": "700",
-      fill: `var(${varName}-ink)`,
+      fill: contrastInk(color),
       "pointer-events": "none",
     }, gChips);
 
@@ -544,7 +568,7 @@ function buildWheel() {
     }, gLabels);
     label.textContent = state.areas[i].short;
 
-    segEls.push({ fill, chip, chipText, label });
+    segEls.push({ fill, chip, chipText, label, track: trackEls[i] });
   }
 
   // Centro: média
@@ -588,8 +612,8 @@ let dragSeg = null;
 
 function svgPointFromEvent(e) {
   const rect = wheel.getBoundingClientRect();
-  const x = ((e.clientX - rect.left) / rect.width) * VB;
-  const y = ((e.clientY - rect.top) / rect.height) * VB;
+  const x = VBX + ((e.clientX - rect.left) / rect.width) * VBW;
+  const y = VBY + ((e.clientY - rect.top) / rect.height) * VBH;
   return [x, y];
 }
 
@@ -653,55 +677,53 @@ wheel.addEventListener("touchstart", e => {
 /* ================= Lista de áreas ================= */
 
 const areasList = $("#areasList");
-const rowEls = []; // { nameEl, badgeEl, slider }
+const rowEls = []; // { nameEl, badgeEl, slider, row }
 
 function buildList() {
   areasList.innerHTML = "";
   rowEls.length = 0;
 
-  let currentQ = -1;
-  let qContainer = null;
-
   state.areas.forEach((area, i) => {
-    if (area.q !== currentQ) {
-      currentQ = area.q;
-      qContainer = document.createElement("section");
-      qContainer.className = "quadrant";
-      const head = document.createElement("div");
-      head.className = "q-head";
-      const dot = document.createElement("span");
-      dot.className = "dot";
-      dot.style.background = `var(${QUADRANTS[currentQ].varName})`;
-      const title = document.createElement("span");
-      title.className = "q-title";
-      title.textContent = QUADRANTS[currentQ].label;
-      head.append(dot, title);
-      qContainer.appendChild(head);
-      areasList.appendChild(qContainer);
-    }
-
     const row = document.createElement("div");
     row.className = "area-row";
-    row.style.setProperty("--qc", `var(${QUADRANTS[area.q].varName})`);
+    row.style.setProperty("--qc", area.color);
 
+    // ---- topo: nome + descrição à esquerda, ferramentas à direita ----
     const top = document.createElement("div");
     top.className = "row-top";
+
+    const head = document.createElement("div");
+    head.className = "area-head";
 
     const name = document.createElement("span");
     name.className = "area-name";
     name.textContent = area.name;
+
+    const desc = document.createElement("p");
+    desc.className = "area-desc";
+    desc.textContent = area.desc;
+
+    head.append(name, desc);
+
+    const tools = document.createElement("div");
+    tools.className = "row-tools";
 
     const edit = document.createElement("button");
     edit.className = "edit-btn";
     edit.type = "button";
     edit.title = "Renomear área";
     edit.setAttribute("aria-label", `Renomear ${area.name}`);
-    edit.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>';
+    edit.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>';
+
+    tools.append(edit);
+    top.append(head, tools);
+
+    // ---- linha do slider: nota + controle ----
+    const sliderWrap = document.createElement("div");
+    sliderWrap.className = "slider-wrap";
 
     const badge = document.createElement("span");
     badge.className = "value-badge";
-
-    top.append(name, edit, badge);
 
     const slider = document.createElement("input");
     slider.type = "range";
@@ -709,9 +731,10 @@ function buildList() {
     slider.value = area.value;
     slider.setAttribute("aria-label", `Nota para ${area.name}, de 0 a 10`);
 
-    row.append(top, slider);
-    qContainer.appendChild(row);
-    rowEls.push({ nameEl: name, badgeEl: badge, slider });
+    sliderWrap.append(badge, slider);
+    row.append(top, sliderWrap);
+    areasList.appendChild(row);
+    rowEls.push({ nameEl: name, badgeEl: badge, slider, row });
 
     slider.addEventListener("input", () => {
       setValue(i, Number(slider.value), /*fromSlider*/ true);
@@ -800,7 +823,7 @@ function fillTile(sel, i) {
     tile.querySelector(".t-score").textContent = "—";
     return;
   }
-  tile.querySelector(".dot").style.background = `var(${QUADRANTS[state.areas[i].q].varName})`;
+  tile.querySelector(".dot").style.background = state.areas[i].color;
   tile.querySelector(".t-name").textContent = state.areas[i].name;
   tile.querySelector(".t-score").textContent = state.areas[i].value;
 }
@@ -863,9 +886,8 @@ function drawExportCanvas() {
     page: cssVar("--page"), surface: cssVar("--surface"),
     ink1: cssVar("--ink-1"), ink2: cssVar("--ink-2"), ink3: cssVar("--ink-3"),
     grid: cssVar("--grid"), baseline: cssVar("--baseline"),
-    q: QUADRANTS.map(q => cssVar(q.varName)),
-    qInk: QUADRANTS.map(q => cssVar(q.varName + "-ink")),
   };
+  const areaColor = i => state.areas[i].color;
   const FONT = 'system-ui, -apple-system, "Segoe UI", sans-serif';
 
   ctx.fillStyle = col.page;
@@ -892,8 +914,8 @@ function drawExportCanvas() {
     ctx.arc(cx, cy, r, a0, a1);
     ctx.arc(cx, cy, r0, a1, a0, true);
     ctx.closePath();
-    ctx.globalAlpha = 0.07;
-    ctx.fillStyle = col.q[state.areas[i].q];
+    ctx.globalAlpha = 0.09;
+    ctx.fillStyle = areaColor(i);
     ctx.fill();
     ctx.globalAlpha = 1;
   }
@@ -926,7 +948,7 @@ function drawExportCanvas() {
     ctx.arc(cx, cy, rv, a0, a1);
     ctx.arc(cx, cy, r0, a1, a0, true);
     ctx.closePath();
-    ctx.fillStyle = col.q[state.areas[i].q];
+    ctx.fillStyle = areaColor(i);
     ctx.fill();
     ctx.strokeStyle = col.surface;
     ctx.lineWidth = 3.5;
@@ -943,12 +965,12 @@ function drawExportCanvas() {
     const px = cx + rv * Math.cos(a), py = cy + rv * Math.sin(a);
     ctx.beginPath();
     ctx.arc(px, py, 19, 0, TAU);
-    ctx.fillStyle = col.q[state.areas[i].q];
+    ctx.fillStyle = areaColor(i);
     ctx.fill();
     ctx.strokeStyle = col.surface;
     ctx.lineWidth = 3;
     ctx.stroke();
-    ctx.fillStyle = col.qInk[state.areas[i].q];
+    ctx.fillStyle = contrastInk(areaColor(i));
     ctx.font = `700 19px ${FONT}`;
     ctx.fillText(String(values[i]), px, py + 1);
   }
@@ -980,7 +1002,7 @@ function drawExportCanvas() {
     const y = legendY + (i % 6) * rowH;
     ctx.beginPath();
     ctx.arc(colW[cIdx] + 8, y, 8, 0, TAU);
-    ctx.fillStyle = col.q[area.q];
+    ctx.fillStyle = area.color;
     ctx.fill();
     ctx.fillStyle = col.ink2;
     ctx.font = `500 25px ${FONT}`;
@@ -1020,9 +1042,7 @@ function exportFileName() {
   return `roda-da-vida-${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}.png`;
 }
 
-$("#downloadBtn").addEventListener("click", async () => {
-  const blob = await exportBlob();
-  if (!blob) { showToast("Não foi possível gerar a imagem"); return; }
+function downloadBlob(blob) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -1031,8 +1051,36 @@ $("#downloadBtn").addEventListener("click", async () => {
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+
+$("#downloadBtn").addEventListener("click", async () => {
+  const blob = await exportBlob();
+  if (!blob) { showToast("Não foi possível gerar a imagem"); return; }
+  downloadBlob(blob);
   showToast("Imagem salva 🎉");
 });
+
+// Copia texto para a área de transferência, com fallback para navegadores antigos
+async function copyText(text) {
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (e) { /* cai no fallback abaixo */ }
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    const ok = document.execCommand("copy");
+    ta.remove();
+    return ok;
+  } catch (e) { return false; }
+}
 
 // Monta uma legenda personalizada e profissional para o compartilhamento
 function buildShareText() {
@@ -1066,23 +1114,57 @@ function shareUrl() {
   return "";
 }
 
+// O botão fica SEMPRE visível — sempre faz algo útil, adaptando-se ao ambiente.
+// A Web Share API (ainda mais com imagem) exige HTTPS e, na prática, é de celular.
+// Em desktop / arquivo local, caímos no fallback de copiar texto + baixar imagem.
 const shareBtn = $("#shareBtn");
-if (navigator.canShare && navigator.canShare({ files: [new File([""], "t.png", { type: "image/png" })] })) {
-  shareBtn.hidden = false;
-  shareBtn.addEventListener("click", async () => {
+shareBtn.hidden = false;
+let sharing = false;
+
+shareBtn.addEventListener("click", async () => {
+  if (sharing) return;
+  sharing = true;
+  shareBtn.disabled = true;
+  try {
     const blob = await exportBlob();
     if (!blob) { showToast("Não foi possível gerar a imagem"); return; }
     const file = new File([blob], exportFileName(), { type: "image/png" });
-    const data = {
-      files: [file],
-      title: "Minha Roda da Vida",
-      text: buildShareText(),
-    };
-    try {
-      await navigator.share(data);
-    } catch (e) { /* usuário cancelou o compartilhamento */ }
-  });
-}
+    const text = buildShareText();
+
+    // 1) Compartilhamento nativo COM imagem (ideal: celular em HTTPS)
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: "Minha Roda da Vida", text });
+        return;
+      } catch (e) {
+        if (e && e.name === "AbortError") return; // usuário cancelou
+        // qualquer outro erro → tenta as próximas camadas
+      }
+    }
+
+    // 2) Compartilhamento nativo só de texto + link (sem imagem)
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "Minha Roda da Vida", text });
+        downloadBlob(blob); // a imagem não vai nesse tipo de share → baixa junto
+        showToast("Imagem baixada para você anexar 📎");
+        return;
+      } catch (e) {
+        if (e && e.name === "AbortError") return;
+      }
+    }
+
+    // 3) Fallback universal (desktop / file://): copia o texto e baixa a imagem
+    const copied = await copyText(text);
+    downloadBlob(blob);
+    showToast(copied
+      ? "Legenda copiada e imagem baixada — cole e anexe onde quiser 🎉"
+      : "Imagem baixada — o compartilhamento direto não é suportado aqui");
+  } finally {
+    sharing = false;
+    shareBtn.disabled = false;
+  }
+});
 
 // Preenche og:url dinamicamente quando a página está publicada
 (function () {
