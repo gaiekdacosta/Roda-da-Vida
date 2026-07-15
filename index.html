@@ -273,6 +273,88 @@
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+  /* ---------- Modal de compartilhamento ---------- */
+  .share-modal {
+    position: fixed; inset: 0; z-index: 60;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  @media (min-width: 620px) { .share-modal { align-items: center; } }
+  .share-modal[hidden] { display: none; }
+  .share-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(10, 10, 10, 0.5);
+    backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+    animation: fadeIn 0.2s ease;
+  }
+  .share-sheet {
+    position: relative;
+    width: 100%; max-width: 440px;
+    max-height: 92vh; overflow-y: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 22px 22px 0 0;
+    padding: 18px 18px calc(20px + env(safe-area-inset-bottom));
+    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.25);
+    animation: sheetUp 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @media (min-width: 620px) {
+    .share-sheet {
+      border-radius: 20px; margin: 16px;
+      max-height: calc(100vh - 32px);
+      padding: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      animation: popIn 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+  }
+  @keyframes fadeIn { from { opacity: 0; } }
+  @keyframes sheetUp { from { transform: translateY(100%); } }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.96); } }
+
+  .share-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .share-head h3 { font-size: 1.15rem; letter-spacing: -0.01em; }
+  .share-close {
+    width: 34px; height: 34px; border-radius: 10px; flex: none;
+    display: grid; place-items: center; color: var(--ink-2);
+  }
+  .share-close:hover { background: color-mix(in srgb, var(--ink-1) 7%, transparent); color: var(--ink-1); }
+
+  .share-caption {
+    background: var(--page); border: 1px solid var(--border); border-radius: 12px;
+    padding: 10px 12px; margin-bottom: 14px;
+    font-size: 0.82rem; color: var(--ink-2); line-height: 1.4;
+    white-space: pre-wrap; max-height: 118px; overflow-y: auto;
+  }
+
+  .share-targets { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .share-target {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 14px; border-radius: 12px;
+    font-weight: 600; font-size: 0.92rem; text-decoration: none;
+    color: var(--ink-1); border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--brand) 12%, transparent);
+    transition: transform 0.1s, background 0.2s;
+  }
+  .share-target:hover { background: color-mix(in srgb, var(--brand) 20%, transparent); }
+  .share-target:active { transform: scale(0.97); }
+  .st-icon { display: grid; place-items: center; color: var(--brand); flex: none; }
+  .st-whatsapp { --brand: #25d366; }
+  .st-telegram { --brand: #229ed9; }
+  .st-x        { --brand: var(--ink-1); }
+  .st-email    { --brand: #8a8f98; }
+
+  .share-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .share-2ndary {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 10px; border-radius: 12px;
+    border: 1px solid var(--border); color: var(--ink-1);
+    font-weight: 600; font-size: 0.9rem;
+    transition: transform 0.1s, background 0.2s;
+  }
+  .share-2ndary:hover { background: color-mix(in srgb, var(--ink-1) 6%, transparent); }
+  .share-2ndary:active { transform: scale(0.97); }
+  .share-2ndary svg { flex: none; }
+  .share-hint { margin-top: 14px; font-size: 0.78rem; color: var(--ink-3); text-align: center; line-height: 1.4; }
+
   @media (max-width: 370px) {
     .btn { padding: 11px 13px; font-size: 0.84rem; gap: 6px; }
   }
@@ -363,6 +445,49 @@
 </div>
 
 <div class="toast" id="toast" role="status"></div>
+
+<!-- Menu de compartilhamento (usado quando não há compartilhamento nativo) -->
+<div class="share-modal" id="shareModal" hidden>
+  <div class="share-backdrop" id="shareBackdrop"></div>
+  <div class="share-sheet" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+    <div class="share-head">
+      <h3 id="shareTitle">Compartilhar</h3>
+      <button class="share-close" id="shareClose" type="button" aria-label="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <p class="share-caption" id="shareCaption"></p>
+    <div class="share-targets">
+      <a class="share-target st-whatsapp" id="shareWhatsapp" target="_blank" rel="noopener">
+        <span class="st-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.05L2 22l5.1-1.34A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.03.8.81-2.95-.2-.31A8.2 8.2 0 1 1 12 20.2Zm4.5-6.14c-.25-.12-1.46-.72-1.68-.8-.23-.09-.39-.13-.56.12-.16.25-.64.8-.78.97-.14.16-.29.18-.54.06a6.7 6.7 0 0 1-1.97-1.22 7.4 7.4 0 0 1-1.36-1.7c-.14-.24 0-.37.11-.49.11-.11.25-.29.37-.43.13-.15.17-.25.25-.42.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.41-.56-.42h-.48c-.16 0-.43.06-.65.31-.22.25-.86.84-.86 2.05s.88 2.38 1 2.54c.13.17 1.74 2.66 4.22 3.73.59.26 1.05.4 1.4.52.6.19 1.14.16 1.57.1.48-.07 1.46-.6 1.67-1.18.2-.58.2-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z"/></svg></span>
+        WhatsApp
+      </a>
+      <a class="share-target st-telegram" id="shareTelegram" target="_blank" rel="noopener">
+        <span class="st-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 18.6 20c-.25 1.1-.9 1.37-1.83.85l-5.05-3.72-2.44 2.35c-.27.27-.5.5-1 .5l.36-5.14 9.36-8.46c.4-.36-.09-.56-.63-.2L5.16 13.2 0.18 11.64c-1.08-.34-1.1-1.08.23-1.6L20.5 2.7c.9-.34 1.69.2 1.4 1.6Z"/></svg></span>
+        Telegram
+      </a>
+      <a class="share-target st-x" id="shareX" target="_blank" rel="noopener">
+        <span class="st-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.2-6.82-5.97 6.82H1.68l7.73-8.84L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.02 4.13H5.06l12.02 15.64Z"/></svg></span>
+        X
+      </a>
+      <a class="share-target st-email" id="shareEmail">
+        <span class="st-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
+        E-mail
+      </a>
+    </div>
+    <div class="share-actions">
+      <button class="share-2ndary" id="shareCopy" type="button">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        Copiar texto
+      </button>
+      <button class="share-2ndary" id="shareDownload" type="button">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Baixar imagem
+      </button>
+    </div>
+    <p class="share-hint">As redes enviam o texto e o link. Para mandar a imagem, baixe e anexe.</p>
+  </div>
+</div>
 
 <script>
 "use strict";
@@ -1114,9 +1239,6 @@ function shareUrl() {
   return "";
 }
 
-// O botão fica SEMPRE visível — sempre faz algo útil, adaptando-se ao ambiente.
-// A Web Share API (ainda mais com imagem) exige HTTPS e, na prática, é de celular.
-// Em desktop / arquivo local, caímos no fallback de copiar texto + baixar imagem.
 const shareBtn = $("#shareBtn");
 shareBtn.hidden = false;
 let sharing = false;
@@ -1126,44 +1248,80 @@ shareBtn.addEventListener("click", async () => {
   sharing = true;
   shareBtn.disabled = true;
   try {
-    const blob = await exportBlob();
-    if (!blob) { showToast("Não foi possível gerar a imagem"); return; }
-    const file = new File([blob], exportFileName(), { type: "image/png" });
     const text = buildShareText();
 
-    // 1) Compartilhamento nativo COM imagem (ideal: celular em HTTPS)
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    // 1) Compartilhamento nativo COM imagem (ideal: celular / navegador compatível)
+    if (navigator.canShare) {
       try {
-        await navigator.share({ files: [file], title: "Minha Roda da Vida", text });
-        return;
+        const blob = await exportBlob();
+        const file = blob && new File([blob], exportFileName(), { type: "image/png" });
+        if (file && navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: "Minha Roda da Vida", text });
+          return;
+        }
       } catch (e) {
-        if (e && e.name === "AbortError") return; // usuário cancelou
-        // qualquer outro erro → tenta as próximas camadas
+        if (e && e.name === "AbortError") return; // usuário cancelou o share nativo
+        // qualquer outro erro → abre o menu próprio abaixo
       }
     }
 
-    // 2) Compartilhamento nativo só de texto + link (sem imagem)
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: "Minha Roda da Vida", text });
-        downloadBlob(blob); // a imagem não vai nesse tipo de share → baixa junto
-        showToast("Imagem baixada para você anexar 📎");
-        return;
-      } catch (e) {
-        if (e && e.name === "AbortError") return;
-      }
-    }
-
-    // 3) Fallback universal (desktop / file://): copia o texto e baixa a imagem
-    const copied = await copyText(text);
-    downloadBlob(blob);
-    showToast(copied
-      ? "Legenda copiada e imagem baixada — cole e anexe onde quiser 🎉"
-      : "Imagem baixada — o compartilhamento direto não é suportado aqui");
+    // 2) Sem compartilhamento nativo com imagem → abre o menu de opções
+    openShareModal(text);
   } finally {
     sharing = false;
     shareBtn.disabled = false;
   }
+});
+
+/* ---------- Menu de compartilhamento (fallback com links reais) ---------- */
+
+const shareModal = $("#shareModal");
+let lastFocused = null;
+
+function openShareModal(text) {
+  const url = shareUrl();
+  const eText = encodeURIComponent(text);
+  const eUrl = encodeURIComponent(url);
+
+  $("#shareCaption").textContent = text;
+  $("#shareWhatsapp").href = `https://wa.me/?text=${eText}`;
+  $("#shareTelegram").href = `https://t.me/share/url?url=${eUrl}&text=${eText}`;
+  $("#shareX").href = `https://twitter.com/intent/tweet?text=${eText}`;
+  $("#shareEmail").href = `mailto:?subject=${encodeURIComponent("Minha Roda da Vida")}&body=${eText}`;
+
+  lastFocused = document.activeElement;
+  shareModal.hidden = false;
+  document.body.style.overflow = "hidden";
+  $("#shareClose").focus();
+}
+
+function closeShareModal() {
+  shareModal.hidden = true;
+  document.body.style.overflow = "";
+  if (lastFocused && lastFocused.focus) lastFocused.focus();
+}
+
+$("#shareClose").addEventListener("click", closeShareModal);
+$("#shareBackdrop").addEventListener("click", closeShareModal);
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !shareModal.hidden) closeShareModal();
+});
+
+// Ao escolher uma rede, fecha o menu (o link abre em nova aba)
+shareModal.querySelectorAll(".share-target").forEach(a => {
+  a.addEventListener("click", () => setTimeout(closeShareModal, 150));
+});
+
+$("#shareCopy").addEventListener("click", async () => {
+  const ok = await copyText($("#shareCaption").textContent);
+  showToast(ok ? "Texto copiado 📋" : "Não foi possível copiar");
+});
+
+$("#shareDownload").addEventListener("click", async () => {
+  const blob = await exportBlob();
+  if (!blob) { showToast("Não foi possível gerar a imagem"); return; }
+  downloadBlob(blob);
+  showToast("Imagem salva 🎉");
 });
 
 // Preenche og:url dinamicamente quando a página está publicada
